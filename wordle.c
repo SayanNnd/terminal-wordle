@@ -55,6 +55,8 @@ int main() {
     int loader = load_file(validWords);
     if (loader == 1) {
         printf("Could not succesfully open the file\n");
+        printf("Enter any key to exit :- ");
+        getchar();
         return 0;
     }
     char word[10];
