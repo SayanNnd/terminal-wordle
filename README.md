@@ -1,2 +1,3 @@
 # terminal-wordle
-A simple wordle game made in C
+A lightweight, zero-dependency, daily Wordle game made in C.
+Syncs the word between every device using the date from their device.
