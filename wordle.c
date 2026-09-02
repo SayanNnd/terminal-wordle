@@ -96,31 +96,27 @@ int main() {
         }
 
         char hash[10];         //temporary storage for the word which can be edited
-        char colors[10][10];   //tracks colors for each tile
+        char colors[5][10] = {COLOR_BLACK,COLOR_BLACK,COLOR_BLACK,COLOR_BLACK,COLOR_BLACK}; 
         strcpy(hash,word);     
         int checker = 0;       //counts how many letters are correct
         
         //word comparision
         for (int j=0; j<5; j++) {
-            if (toupper(hash[j]) == toupper(guess[j])) {
+            if (toupper(guess[j]) == toupper(hash[j])) {
                 hash[j] = '\0';
                 strcpy(colors[j],COLOR_GREEN);
                 checker++;
             }
         }
         for (int j=0; j<5; j++) {
-            int done = 0;
-            if (hash[j] != '\0') {
-                for (int t=0; t<5; t++) {
-                    if (toupper(hash[t]) == toupper(guess[j])) {
-                        hash[t] = '\0';
-                        strcpy(colors[j],COLOR_YELLOW);
-                        done = 1;
-                        break;
-                    }
+            if (strcmp(colors[j], COLOR_GREEN) == 0) continue;
+            for (int t = 0; t < 5; t++) {
+                if (hash[t] != '\0' && toupper(guess[j]) == toupper(hash[t])) {
+                    strcpy(colors[j], COLOR_YELLOW);
+                    hash[t] = '\0';
+                    break;
                 }
-            if (done == 0) strcpy(colors[j],COLOR_BLACK);;    
-            }
+            }    
         }
 
         //print the word
