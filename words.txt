@@ -6529,6 +6529,7 @@ huers
 huffs
 huffy
 huger
+huges
 huggy
 huhus
 huias
@@ -8623,6 +8624,7 @@ oater
 oaths
 oaves
 obang
+obama
 obeah
 obeli
 obeys
@@ -8882,6 +8884,7 @@ palmy
 palpi
 palps
 palsa
+paltz
 pampa
 panax
 pance
@@ -8931,6 +8934,7 @@ parol
 parps
 parra
 parrs
+parth
 parti
 parts
 parve
@@ -9986,6 +9990,7 @@ ronde
 rondo
 roneo
 rones
+ronik
 ronin
 ronne
 ronte
@@ -10262,6 +10267,7 @@ sawah
 sawed
 sawer
 saxes
+sayan
 sayed
 sayer
 sayid
@@ -11557,6 +11563,7 @@ tewit
 texas
 texes
 texts
+tfour
 thack
 thagi
 thaim

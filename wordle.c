@@ -4,15 +4,17 @@
 #include <time.h>
 #include <ctype.h>
 
-#define COLOR_RESET  "\x1b[39;49m"
+//colors
+#define COLOR_RESET  "\x1b[39;49m"           
 #define COLOR_BLACK  "\033[40;37m"
 #define COLOR_GREEN  "\x1b[42;30m"
 #define COLOR_YELLOW "\x1b[43;30m"
 #define COLOR_RED    "\x1b[41;30m"
 #define COLOR_BLUE   "\x1b[46;30m"
-#define NO_OF_WORDS  12944
+#define NO_OF_WORDS  12979
 #define VALID_WORDS  2315
 
+//Loads the file into an array
 int load_file(char validWords[][7]) {
     FILE *wordle;
     wordle = fopen("words.txt","r");
@@ -27,6 +29,7 @@ int load_file(char validWords[][7]) {
     return 0;
 }
 
+//Picks word of the day
 int word_picker() {
     time_t rawtime;
     time(&rawtime);
@@ -39,6 +42,7 @@ int word_picker() {
     return (seed % (VALID_WORDS + 1));
 }
 
+//Checks if a word is valid ------ Needs to be optimized 
 int word_check(char word[10], char validWords[][7]) {
     for (int i=0; i<NO_OF_WORDS; i++) {
         int j=0;
@@ -51,7 +55,9 @@ int word_check(char word[10], char validWords[][7]) {
 }
 
 int main() {
-    char validWords[NO_OF_WORDS][7];
+    char validWords[NO_OF_WORDS][7];    //stores all words
+
+    //error handling for file
     int loader = load_file(validWords);
     if (loader == 1) {
         printf("Could not succesfully open the file\n");
@@ -59,43 +65,77 @@ int main() {
         getchar();
         return 0;
     }
+
     char word[10];
     strcpy(word, validWords[word_picker()]);
     char guess[20];
+    int status = 0;
     printf("*WORDLE*\nGuess the correct word\n");
+
+    //Game Logic
     for (int i=1; i<=6; i++) {
         fgets(guess, sizeof(guess), stdin);
+        //removes older error lines
+        if (status == 1) {
+            printf("\x1b[A\x1b[2K");
+        }
         printf("\x1b[A\x1b[2K");
+
         if (strlen(guess) != 6) {
             printf(COLOR_RED "Please Enter a 5-Letter Word" COLOR_RESET "\n");
+            status = 1;
             i--;
             continue;
         }
         int resp = word_check(guess, validWords);
         if (resp == 1) {
             printf(COLOR_RED "Please Enter a valid Word" COLOR_RESET "\n");
+            status = 1;
             i--;
             continue;
         }
+
+        char hash[10];         //temporary storage for the word which can be edited
+        char colors[10][10];   //tracks colors for each tile
+        strcpy(hash,word);     
+        int checker = 0;       //counts how many letters are correct
         
-        int checker = 0;
+        //word comparision
         for (int j=0; j<5; j++) {
-            if (toupper(word[j]) == toupper(guess[j])) {
-                printf(COLOR_GREEN " %c " COLOR_RESET " ",toupper(guess[j]));
+            if (toupper(hash[j]) == toupper(guess[j])) {
+                hash[j] = '\0';
+                strcpy(colors[j],COLOR_GREEN);
                 checker++;
             }
-            else if (toupper(word[0]) == toupper(guess[j]) || toupper(word[1]) == toupper(guess[j]) || toupper(word[2]) == toupper(guess[j]) || toupper(word[3]) == toupper(guess[j]) || toupper(word[4]) == toupper(guess[j])){
-                printf(COLOR_YELLOW " %c " COLOR_RESET " ",toupper(guess[j]));
-            }
-            else {
-                printf(COLOR_BLACK " %c " COLOR_RESET " ",toupper(guess[j]));
+        }
+        for (int j=0; j<5; j++) {
+            int done = 0;
+            if (hash[j] != '\0') {
+                for (int t=0; t<5; t++) {
+                    if (toupper(hash[t]) == toupper(guess[j])) {
+                        hash[t] = '\0';
+                        strcpy(colors[j],COLOR_YELLOW);
+                        done = 1;
+                        break;
+                    }
+                }
+            if (done == 0) strcpy(colors[j],COLOR_BLACK);;    
             }
         }
+
+        //print the word
+        for (int j=0; j<5; j++) {
+            printf("%s %c "COLOR_RESET " ",colors[j],toupper(guess[j]));
+        }
         printf("\n");
+
+        //win condition
         if (checker == 5) {
             printf("CONGRATS!!\n");
             break;
         }
+
+        //lose condition
         if (i == 6) {
             printf("You Lost!!\n");
             for (int k = 0; k < 5; k++) {
@@ -104,6 +144,7 @@ int main() {
             printf(" was the correct word.\nBetter Luck Tomorrow\n");
             break;
         }
+        status = 0;
     }
     printf("Enter any key to exit :- ");
     getchar();
